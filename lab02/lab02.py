@@ -33,16 +33,16 @@ ROMEO_SOLILOQUY = """
 ################################################################################
 # Implement this function
 def compute_ngrams(toks, n=2):
-    """Returns an n-gram dictionary based on the provided list of tokens."""
-    dic = {}
+  """Returns an n-gram dictionary based on the provided list of tokens."""
+  dic = {}
 
-    for i in range(len(toks) - (n-1)):
-        if (toks[i] not in dic):
-                dic[toks[i]] = [tuple(toks[i+1:n+i])]
-        else:
-                dic[toks[i]].append(tuple(toks[i+1:n+i]))
+  for i in range(len(toks) - (n-1)):
+    if (toks[i] not in dic):
+      dic[toks[i]] = [tuple(toks[i+1:n+i])]
+    else:
+      dic[toks[i]].append(tuple(toks[i+1:n+i]))
 
-    return dic
+  return dic
 
 def test1():
     test1_1()
@@ -100,19 +100,20 @@ def test1_2():
 # EXERCISE 2
 ################################################################################
 # Implement this function
-def gen_passage(ngram_dict, length=100):
-    s = ''
-    curTok = random.choice(sorted(ngram_dict.keys()))
-    s += curTok
-    for i in range(length):
-        tup = random.choice(ngram_dict[curTok])
-        curTok = tup[-1]
+def gen_passage(ngram_dict, length=10):
+
+  s = ''
+  curTok = random.choice(sorted(ngram_dict.keys()))
+  s += curTok
+  for i in range(length):
+    tup = random.choice(ngram_dict[curTok])
+    curTok = tup[-1]
     if (len(s.split()) < length):
-        s += " " + curTok
+      s += " " + curTok
     if (curTok not in ngram_dict):
-        curTok = random.choice(sorted(ngram_dict.keys()))
-        if (len(s.split()) < length):
-                s += " " + curTok
+      curTok = random.choice(sorted(ngram_dict.keys()))
+      if (len(s.split()) < length):
+        s += " " + curTok
 
   return s
 
