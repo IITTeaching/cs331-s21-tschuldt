@@ -53,6 +53,22 @@ class HBStree:
         KeyError, if key does not exist.
         """
         # BEGIN SOLUTION
+        cur = self.root_versions[-1]
+
+        def find(v, k):
+          if not v:
+            return False
+          if v.key == k:
+            return True
+          if v.key > k:
+            find(v.left, k)
+          if v.key < k:
+            find(v.right, k)
+          
+        if find(cur, key):
+          return key
+        else:
+          return keyError
         # END SOLUTION
 
     def __contains__(self, el):
@@ -60,6 +76,19 @@ class HBStree:
         Return True if el exists in the current version of the tree.
         """
         # BEGIN SOLUTION
+        cur = self.root_versions[-1]
+
+        def find(v, k):
+          if not v:
+            return False
+          if v.key == k:
+            return True
+          if v.key > k:
+            find(v.left, k)
+          if v.key < k:
+            find(v.right, k)
+
+        return find(cur, key)
         # END SOLUTION
 
     def insert(self,key):
@@ -69,6 +98,39 @@ class HBStree:
         from creating a new version.
         """
         # BEGIN SOLUTION
+        cur = self.root_versions[-1]
+        if cur == None:
+          cur = self.INode(key, None, None)
+          self.root_versions.append(cur)
+          return
+        
+        parentList = []
+        while cur:
+          parentList.append(cur)
+          if key < cur.val:
+            cur = cur.left
+          elif key > cur.val:
+            cur = cur.right
+          elif key == cur.val:
+            return
+          else:
+            break
+
+        parent = parentList.pop()
+        child = self.INode(key,None,None)
+        
+        if(key < parent.val):
+          parentNode = self.INode(parent.val, child, parent.right)
+        else:
+          parentNode = self.INode(parent.val, parent.left, child)
+        
+        while(len(parentList) > 0):
+          parent = parentList.pop()
+          if(parent.val > parentNode.val):
+            parentNode = self.INode(parent.val, parentNode, parent.right)
+          else:
+            parentNode = self.INode(parent.val, parent.left, parentNode)
+        self.root_versions.append(parentNode)
         # END SOLUTION
 
     def delete(self,key):
