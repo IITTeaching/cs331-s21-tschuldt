@@ -15,6 +15,9 @@ class AVLTree:
 
         def rotate_left(self):
             ### BEGIN SOLUTION
+            n = self.right
+            self.val, n.val = n.val, self.val
+            self.right, n.right, self.left, n.left = n.right, n.left, n, self.left
             ### END SOLUTION
 
         @staticmethod
@@ -31,16 +34,63 @@ class AVLTree:
     @staticmethod
     def rebalance(t):
         ### BEGIN SOLUTION
-        ### END SOLUTION
+        if t.balance_factor() <= -2:
+            if(t.left.right and t.left.balance_factor()>0):
+                t.left.rotate_left()
+            t.rotate_right()
+            return t
+        elif t.balance_factor() >= 2:
+            if(t.right.left and t.right.balance_factor()<0):
+                t.right.rotate_right()
+            t.rotate_left()
+            return t
+        else:
+            return t
+        ### END SOLUTION 
 
     def add(self, val):
-        assert(val not in self)
+        assert (val not in self)
         ### BEGIN SOLUTION
+        def loc(t, val):
+          tpass=t
+          if (tpass==None):
+            tpass=self.Node(val)
+            return tpass
+          if (tpass.val > val):
+            tpass.left= loc(tpass.left,val)
+          elif (val> tpass.val):
+            tpass.right= loc(tpass.right,val)
+          tpass=AVLTree.rebalance(tpass)
+          self.size += 1
+          return tpass
+        self.root = loc(self.root,val)
         ### END SOLUTION
 
     def __delitem__(self, val):
-        assert(val in self)
+        assert (val in self)
         ### BEGIN SOLUTION
+        def deletehelp (node, val):
+          if val < node.val:
+            node.left = deletehelp(node.left, val)
+          if val > node.val:
+            node.right = deletehelp(node.right, val)
+          if val == node.val:
+            if node is None:
+              return None
+            if node.left is None:
+              return node.right
+            if node.right is None:
+              return node.left
+            toDel = node.right
+            while toDel.left:
+              toDel = toDel.left
+            node.val = toDel.val
+            node.right = deletehelp(node.right, toDel.val)
+
+          AVLTree.rebalance(node)
+          return node
+        self.root = deletehelp(self.root, val)
+        self.size -= 1
         ### END SOLUTION
 
     def __contains__(self, val):
