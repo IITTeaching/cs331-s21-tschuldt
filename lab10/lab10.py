@@ -26,6 +26,9 @@ class AVLTree:
                 return 0
             else:
                 return max(1+AVLTree.Node.height(n.left), 1+AVLTree.Node.height(n.right))
+            
+        def balance_factor(self):
+            return self.height(self.right) - self.height(self.left)
 
     def __init__(self):
         self.size = 0
